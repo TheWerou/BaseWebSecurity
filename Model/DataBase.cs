@@ -14,6 +14,24 @@ namespace OBiBiapp.Model
         public DataBase()
         {
             this.listOfUsers = new List<User>();
+            this.CreateUser();
+        }
+
+        private void CreateUser()
+        {
+            var newUser = new User()
+            {
+                Login = "Tomek",
+                Password = "Tomek",
+                Email = "Tomek,"
+            };
+            AddUser(newUser);
+            
+        }
+
+        public IEnumerable<User> GetAllUsers()
+        {
+            return this.listOfUsers;
         }
 
         public void AddUser(User user)

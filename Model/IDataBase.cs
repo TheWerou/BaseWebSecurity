@@ -7,9 +7,11 @@ namespace OBiBiapp.Model
 {
     public interface IDataBase
     {
-        public void AddUser(User user);
+        public IEnumerable<User> GetAllUsers();
 
         public User GetUser(int itemPosition);
+
+        public void AddUser(User user);
 
         public bool CheckIfUserIsCorrect(UserLogin user);
 

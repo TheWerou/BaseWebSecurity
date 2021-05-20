@@ -25,6 +25,12 @@ namespace OBiBiapp.Controllers
             return "XD";
         }
 
+        [HttpGet("GetAllUsers")]
+        public IEnumerable<User> GetAllUsers()
+        {
+            return this.db.GetAllUsers();
+        }
+
         [HttpPost("AddUser")]
         public User AddUser(User user)
         {
