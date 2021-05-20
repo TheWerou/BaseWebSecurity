@@ -10,8 +10,8 @@ export class LoginComponent implements OnInit {
 
   constructor(public formBuilder: FormBuilder) { 
     this.formGrup = this.formBuilder.group({
-      login: new FormControl("",[Validators.required]),
-      pass: new FormControl("",[Validators.required]),
+      login: new FormControl("",[Validators.required, Validators.maxLength(30)]),
+      pass: new FormControl("",[Validators.required, Validators.minLength(10), Validators.maxLength(30)]),
     });
   }
   formGrup: FormGroup;

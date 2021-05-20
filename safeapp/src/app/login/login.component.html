@@ -1,7 +1,7 @@
 
 <h1> Logowanie </h1>
 <hr>
-<div [formGroup]="formGrup">
+<form [formGroup]="formGrup" (ngSubmit)="login()">
     <div class="form-group">
         <label for="inputLogin">Login</label>
         <input type="text" class="form-control" id="inputLogin" placeholder="Login" formControlName="login">
@@ -10,8 +10,11 @@
         <label for="inputPassword">Hasło</label>
         <input type="password" class="form-control" id="inputPassword" placeholder="Hasło" formControlName="pass">
     </div>
-    <button (click)="login()" type="submit" class="btn btn-dark">Zaloguj się</button>
-</div>
+    <button  type="submit" class="btn btn-dark">Zaloguj się</button>
+    <div *ngIf="formGrup.hasError('required', 'pass')">
+        Potrzeba cos wpisac
+    </div>
+</form>
 <hr>
 <button [routerLink]="['']"  class="btn btn-dark">Menu glowne</button>
 <button [routerLink]="['/Registry']" class="btn btn-dark">Rejestracja</button>

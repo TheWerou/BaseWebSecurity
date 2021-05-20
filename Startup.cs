@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using OBiBiapp.Model;
 
 namespace OBiBiapp
 {
@@ -22,6 +23,10 @@ namespace OBiBiapp
         {
             services.AddControllersWithViews();
             // In production, the Angular files will be served from this directory
+            services.AddSwaggerGen();
+
+            services.AddSingleton<IDataBase, DataBase>();
+
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "safeapp/dist";
@@ -42,6 +47,12 @@ namespace OBiBiapp
                 app.UseHsts();
             }
 
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
+            
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             if (!env.IsDevelopment())
