@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using OBiBiapp.JWT;
 using OBiBiapp.Model;
 using System;
 using System.Collections.Generic;
@@ -14,9 +15,13 @@ namespace OBiBiapp.Controllers
     public class UserAuthController : ControllerBase
     {
         private IDataBase db;
-        public UserAuthController(IDataBase db)
+
+        private IJWTHandler jWTHandler;
+
+        public UserAuthController(IDataBase db, IJWTHandler jWTHandler)
         {
             this.db = db;
+            this.jWTHandler = jWTHandler;
         }
 
         [HttpGet("xd")]
@@ -36,6 +41,13 @@ namespace OBiBiapp.Controllers
         {
             this.db.AddUser(user);
             return user;
+        }
+
+        [HttpPost("AddUserJWT")]
+        public string AddUserJWT(User user)
+        {
+            this.db.AddUser(user);
+            return this.jWTHandler.GenerateToken(user.Login);
         }
 
         [HttpPost("Login")]

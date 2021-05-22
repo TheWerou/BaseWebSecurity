@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using OBiBiapp.JWT;
 using OBiBiapp.Model;
 
 namespace OBiBiapp
@@ -26,6 +27,8 @@ namespace OBiBiapp
             services.AddSwaggerGen();
 
             services.AddSingleton<IDataBase, DataBase>();
+
+            services.AddSingleton<IJWTHandler, JWTHandler>();
 
             services.AddSpaStaticFiles(configuration =>
             {
