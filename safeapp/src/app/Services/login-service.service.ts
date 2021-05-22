@@ -10,21 +10,20 @@ import { catchError, retry } from 'rxjs/operators';
 export class LoginServiceService {
 
   constructor(private http: HttpClient) { }
-  serverUrl: string = "https://localhost:44360/"
-  httpOptions = {
-    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-  };
-
-  login(userLogin: LogUser)
+  serverUrl: string = "https://localhost:44360/UserAuth/"
+  
+  login(userLogin: LogUser): Observable<Object>
   {
-    let UrlServer = this.serverUrl + "UserAuth/Login"  
-    let heleper = this.http.post<boolean>(UrlServer, JSON.stringify(userLogin), this.httpOptions)
-    return heleper;
+    const headers = { 'content-type': 'application/json' }
+    const body = JSON.stringify(userLogin);
+    const UrlServer = this.serverUrl + "Login"
+    console.log(body);
+    return this.http.post(UrlServer, body, {'headers': headers});
   }
 
   getAllUsers()
   {
-    let UrlServer = this.serverUrl + "UserAuth/GetAllUsers" 
+    let UrlServer = this.serverUrl + "GetAllUsers" 
     let helper = this.http.get<User[]>(UrlServer)
     return helper;
   }

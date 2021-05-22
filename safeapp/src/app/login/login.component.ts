@@ -20,24 +20,26 @@ export class LoginComponent implements OnInit {
   }
   private destroyed$ = new Subject<any>();
   formGrup: FormGroup;
-  public output2: boolean = false;
+  public output2: any = false;
   ngOnInit(): void {
     
   }
 
-  async login()
+  login()
   {
     let login = this.formGrup.getRawValue()["login"];
     let pass = this.formGrup.getRawValue()["pass"];
-    let object = this.formGrup.getRawValue() as LogUser;
+    let object = {
+      Login: login,
+      Password: pass,
+    }
     
-    let output = this.loginService.login(object).pipe(takeUntil(this.destroyed$)).subscribe(
-      event => this.output2 = event
+    this.loginService.login(object).subscribe(
+      event => {this.output2 = event}
     )
     console.log(login);
     console.log(pass);
     console.log(object);
-    console.log(output);
     console.log(this.output2);
   }
 }
