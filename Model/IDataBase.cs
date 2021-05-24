@@ -11,7 +11,9 @@ namespace OBiBiapp.Model
 
         public User GetUser(int itemPosition);
 
-        public void AddUser(User user);
+        public void AddUser(UserAdd user);
+
+        public void SetConformation(string login);
 
         public bool CheckIfUserIsCorrect(UserLogin user);
 

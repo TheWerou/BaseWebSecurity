@@ -35,6 +35,22 @@ namespace OBiBiapp.Controllers
             return "XD";
         }
 
+        [HttpGet("AutorizeAccount")]
+        public bool AutorizeAccount(string token)
+        {
+            //https://localhost:44360/UserAuth/AutorizeAccount?token=12
+            if(this.jWTHandler.IsTokenValid(token))
+            {
+                var listOfStringClaims = this.jWTHandler.GetClaims(token);
+                this.jWTHandler.ConformLogin(listOfStringClaims[0], listOfStringClaims[1]);
+                this.db.SetConformation(listOfStringClaims[0]);
+
+                return true;
+            }
+
+            return false;
+        }
+
         [HttpGet("SecuredService")]
         public ResponseDTO SecuredService()
         {
@@ -72,17 +88,19 @@ namespace OBiBiapp.Controllers
         }
 
         [HttpPost("AddUserTest")]
-        public User AddUserTest(User user)
+        public UserAdd AddUserTest(UserAdd user)
         {
             this.db.AddUser(user);
+
             return user;
         }
 
         [HttpPost("AddUser")]
-        public bool AddUser(User user)
+        public void AddUser(UserAdd user)
         {
             this.db.AddUser(user);
-            return true;
+            var conformToken = this.jWTHandler.GenerateTokenForAccountConform(user.Login, user.Email);
+            MailSender.SendConfirmationMail(user.Email, conformToken);
         }
 
         [HttpPost("SendMailTest")]

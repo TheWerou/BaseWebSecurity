@@ -10,7 +10,13 @@ namespace OBiBiapp.JWT
     {
         public string SecretKey { get; set; } 
 
-        public string SecurityAlgorithm { get; set; } 
+        public string SecurityAlgorithm { get; set; }
+
+        public void ConformLogin(string login, string email);
+
+        public string GenerateTokenForAccountConform(string login, string email);
+
+        public List<string> GetClaims(string token);
 
         public int ExpireMinutes { get; set; } 
 

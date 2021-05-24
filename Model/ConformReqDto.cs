@@ -5,14 +5,12 @@ using System.Threading.Tasks;
 
 namespace OBiBiapp.Model
 {
-    public class User
+    public class ConformReqDto
     {
         public string Login { get; set; }
 
-        public string Password { get; set; }
-
         public string Email { get; set; }
 
-        public bool Conformed { get; set; } = false;
+        public string Token { get; set; }
     }
 }

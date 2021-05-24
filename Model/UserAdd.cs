@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace OBiBiapp.Model
 {
-    public class User
+    public class UserAdd
     {
         public string Login { get; set; }
 
@@ -13,6 +13,5 @@ namespace OBiBiapp.Model
 
         public string Email { get; set; }
 
-        public bool Conformed { get; set; } = false;
     }
 }

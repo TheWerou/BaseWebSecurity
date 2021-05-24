@@ -19,13 +19,13 @@ namespace OBiBiapp.Model
 
         private void CreateUser()
         {
-            var newUser = new User()
+            var newUser = new UserAdd()
             {
                 Login = "Tomek",
                 Password = "Tomek",
                 Email = "Tomek,"
             };
-            var newUser2 = new User()
+            var newUser2 = new UserAdd()
             {
                 Login = "Michal",
                 Password = "Michal",
@@ -33,7 +33,6 @@ namespace OBiBiapp.Model
             };
             AddUser(newUser);
             AddUser(newUser2);
-            
         }
 
         public IEnumerable<User> GetAllUsers()
@@ -41,13 +40,25 @@ namespace OBiBiapp.Model
             return this.listOfUsers;
         }
 
-        public void AddUser(User user)
+        public void SetConformation(string login)
+        {
+            var objectTochange = this.listOfUsers.FindIndex(c => c.Login == login);
+            this.listOfUsers[objectTochange].Conformed = true;
+        }
+
+        public void AddUser(UserAdd user)
         {
             using (SHA256 mySHA256 = SHA256.Create())
             {
                 user.Password = Encoding.ASCII.GetString(mySHA256.ComputeHash(Encoding.ASCII.GetBytes(user.Password)));
             }
-            this.listOfUsers.Add(user);
+            var newUser = new User()
+            {
+                Login = user.Login,
+                Password = user.Password,
+                Email = user.Email,
+            };
+            this.listOfUsers.Add(newUser);
         }
 
         public User GetUser(int itemPosition)

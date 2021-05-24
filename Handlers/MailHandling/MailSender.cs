@@ -9,7 +9,7 @@ namespace OBiBiapp.Handlers.MailHandling
 {
     public class MailSender
     {
-        public static void SendConfirmationMail(string ToAddress, string ToName)
+        public static void SendConfirmationMail(string ToAddress, string Token)
         {
             var client = new SmtpClient();
             client.Host = "smtp.gmail.com";
@@ -23,7 +23,7 @@ namespace OBiBiapp.Handlers.MailHandling
             message.From = new MailAddress("TestOnReplyPK@gmail.com");
             message.To.Add(new MailAddress(ToAddress));
             message.Subject = "Account conformation";
-            message.Body = "Hi from .NET!";
+            message.Body = "Account was created on this email. Please klik on this link to conform your account " + Token;
 
             client.Send(message);
         }
