@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { LogUser, User } from '../Interfaces/interfaces';
+import { LogUser, ReturnJWT, User } from '../Interfaces/interfaces';
 import { LoginServiceService } from '../Services/login-service.service';
 
 @Component({
@@ -20,7 +20,6 @@ export class LoginComponent implements OnInit {
   }
   private destroyed$ = new Subject<any>();
   formGrup: FormGroup;
-  public output2: any = false;
   ngOnInit(): void {
     
   }
@@ -35,11 +34,13 @@ export class LoginComponent implements OnInit {
     }
     
     this.loginService.login(object).subscribe(
-      event => {this.output2 = event}
+      event => {
+        console.log(event);
+        localStorage.setItem('token', event.jwtToken);  
+      }
     )
     console.log(login);
     console.log(pass);
     console.log(object);
-    console.log(this.output2);
   }
 }

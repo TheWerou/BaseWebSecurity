@@ -8,3 +8,9 @@ export interface User {
     password: string;
     email: string
 }
+export interface ReturnJWT {
+  jwtToken: string;
+}
+export interface ResponseDTO {
+  massage: string;
+}

@@ -1,11 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 using OBiBiapp.JWT;
 using OBiBiapp.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace OBiBiapp.Controllers
@@ -30,6 +34,37 @@ namespace OBiBiapp.Controllers
             return "XD";
         }
 
+        [HttpGet("SecuredService")]
+        public ResponseDTO SecuredService()
+        {
+            ResponseDTO retrunObject = new ResponseDTO();
+            if (this.Request.Headers.ContainsKey("authorization"))
+            {
+                var header = this.Request.Headers;
+                var listofAout = StringValues.Empty;
+                header.TryGetValue("authorization", out listofAout);
+
+                var stringJWT = listofAout.ToString().Remove(0, 7);
+
+                if (this.jWTHandler.IsTokenValid(stringJWT))
+                {
+                    retrunObject.Massage = "Tajna wiadomosc";
+                    return retrunObject;
+                }
+                else
+                {
+                    retrunObject.Massage = "Nie jestes zalogowany";
+                    return retrunObject;
+                }
+            }
+            else
+            {
+                retrunObject.Massage = "Nie jestes zalogowany";
+                return retrunObject;
+            }
+
+        }
+
         [HttpGet("GetAllUsers")]
         public IEnumerable<User> GetAllUsers()
         {
@@ -44,14 +79,33 @@ namespace OBiBiapp.Controllers
         }
 
         [HttpPost("AddUserJWT")]
-        public string AddUserJWT(User user)
+        public bool AddUserJWT(User user)
         {
             this.db.AddUser(user);
-            return this.jWTHandler.GenerateToken(user.Login);
+            return true;
+        }
+
+        [HttpPost("LoginJWT")]
+        public ReturnJWT LoginJWT(UserLogin login)
+        {
+
+            if (this.db.CheckIfUserIsCorrect(login))
+            {
+                var returnObject = new ReturnJWT()
+                {
+                    JWTToken = this.jWTHandler.GenerateToken(login.Login)
+                };
+                return returnObject;
+            }
+            else
+            {
+                return null;
+            }
+
         }
 
         [HttpPost("Login")]
-        public bool LoginUser(UserLogin login )
+        public bool LoginUser(UserLogin login)
         {
             return this.db.CheckIfUserIsCorrect(login);
         }
