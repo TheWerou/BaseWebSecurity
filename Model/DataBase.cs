@@ -40,6 +40,15 @@ namespace OBiBiapp.Model
             return this.listOfUsers;
         }
 
+        public void ResetPassword(string email, UserPassRestart userPass)
+        {
+            var objectTochange = this.listOfUsers.FindIndex(c => c.Email == email);
+            using (SHA256 mySHA256 = SHA256.Create())
+            {
+                this.listOfUsers[objectTochange].Password = Encoding.ASCII.GetString(mySHA256.ComputeHash(Encoding.ASCII.GetBytes(userPass.Password))); 
+            } 
+        }
+
         public void SetConformation(string login)
         {
             var objectTochange = this.listOfUsers.FindIndex(c => c.Login == login);

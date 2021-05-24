@@ -35,6 +35,26 @@ namespace OBiBiapp.Controllers
             return "XD";
         }
 
+        [HttpPost("RestartPassword")]
+        public bool RestartPassword(UserPassRestart userPass)
+        {
+            if (this.jWTHandler.IsTokenValid(userPass.Token))
+            {
+                var ListClaims = this.jWTHandler.GetClaims(userPass.Token);
+                this.jWTHandler.ConformPassReset(ListClaims[0]);
+                this.db.ResetPassword(ListClaims[0], userPass);
+                return true;
+            }
+            return false;
+        }
+
+        [HttpPost("RequestPasswordChange")]
+        public void RequestPasswordChange(string userPass)
+        {
+            var token = this.jWTHandler.GenerateToken(userPass);
+            MailSender.SendConfirmationMail(userPass, token);
+        }
+
         [HttpGet("AutorizeAccount")]
         public bool AutorizeAccount(string token)
         {

@@ -16,6 +16,8 @@ namespace OBiBiapp.JWT
 
         public string GenerateTokenForAccountConform(string login, string email);
 
+        public void ConformPassReset(string email);
+
         public List<string> GetClaims(string token);
 
         public int ExpireMinutes { get; set; } 

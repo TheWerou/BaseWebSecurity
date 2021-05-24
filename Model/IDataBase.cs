@@ -13,6 +13,8 @@ namespace OBiBiapp.Model
 
         public void AddUser(UserAdd user);
 
+        public void ResetPassword(string email, UserPassRestart userPass);
+
         public void SetConformation(string login);
 
         public bool CheckIfUserIsCorrect(UserLogin user);
