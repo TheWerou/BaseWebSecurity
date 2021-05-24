@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+using OBiBiapp.Handlers.MailHandling;
 using OBiBiapp.JWT;
 using OBiBiapp.Model;
 using System;
@@ -62,7 +63,6 @@ namespace OBiBiapp.Controllers
                 retrunObject.Massage = "Nie jestes zalogowany";
                 return retrunObject;
             }
-
         }
 
         [HttpGet("GetAllUsers")]
@@ -71,18 +71,24 @@ namespace OBiBiapp.Controllers
             return this.db.GetAllUsers();
         }
 
-        [HttpPost("AddUser")]
-        public User AddUser(User user)
+        [HttpPost("AddUserTest")]
+        public User AddUserTest(User user)
         {
             this.db.AddUser(user);
             return user;
         }
 
-        [HttpPost("AddUserJWT")]
-        public bool AddUserJWT(User user)
+        [HttpPost("AddUser")]
+        public bool AddUser(User user)
         {
             this.db.AddUser(user);
             return true;
+        }
+
+        [HttpPost("SendMailTest")]
+        public void SendMailTest(User user)
+        {
+            MailSender.SendConfirmationMail(user.Email, user.Login);
         }
 
         [HttpPost("LoginJWT")]
@@ -91,11 +97,10 @@ namespace OBiBiapp.Controllers
 
             if (this.db.CheckIfUserIsCorrect(login))
             {
-                var returnObject = new ReturnJWT()
+                return new ReturnJWT()
                 {
                     JWTToken = this.jWTHandler.GenerateToken(login.Login)
                 };
-                return returnObject;
             }
             else
             {

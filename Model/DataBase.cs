@@ -25,7 +25,14 @@ namespace OBiBiapp.Model
                 Password = "Tomek",
                 Email = "Tomek,"
             };
+            var newUser2 = new User()
+            {
+                Login = "Michal",
+                Password = "Michal",
+                Email = "Michal,"
+            };
             AddUser(newUser);
+            AddUser(newUser2);
             
         }
 
