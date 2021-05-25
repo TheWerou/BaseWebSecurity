@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { LogUser, ReturnJWT, User } from '../Interfaces/interfaces';
@@ -12,10 +13,13 @@ import { LoginServiceService } from '../Services/login-service.service';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(public formBuilder: FormBuilder, public loginService: LoginServiceService) { 
+  constructor(public formBuilder: FormBuilder, 
+    public loginService: LoginServiceService,
+    public router: Router) { 
+
     this.formGrup = this.formBuilder.group({
-      login: new FormControl("",[Validators.required, Validators.maxLength(30)]),
-      pass: new FormControl("",[Validators.required, Validators.minLength(10), Validators.maxLength(30)]),
+      login: new FormControl("",[Validators.required]),
+      pass: new FormControl("",[Validators.required]),
     });
   }
   private destroyed$ = new Subject<any>();
@@ -37,10 +41,12 @@ export class LoginComponent implements OnInit {
       event => {
         console.log(event);
         localStorage.setItem('token', event.jwtToken);  
+        this.router.navigateByUrl('/Site');
       }
     )
     console.log(login);
     console.log(pass);
     console.log(object);
+    
   }
 }

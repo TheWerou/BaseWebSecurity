@@ -49,19 +49,19 @@ namespace OBiBiapp.Controllers
         }
 
         [HttpPost("RequestPasswordChange")]
-        public void RequestPasswordChange(string userPass)
+        public void RequestPasswordChange(ResponseDTO userEmail)
         {
-            var token = this.jWTHandler.GenerateToken(userPass);
-            MailSender.SendConfirmationMail(userPass, token);
+            var token = this.jWTHandler.GenerateToken(userEmail.Massage);
+            MailSender.SendPasswordResetMail(userEmail.Massage, token);
         }
 
-        [HttpGet("AutorizeAccount")]
-        public bool AutorizeAccount(string token)
+        [HttpPost("AutorizeAccount")]
+        public bool AutorizeAccount(ReturnJWT token)
         {
             //https://localhost:44360/UserAuth/AutorizeAccount?token=12
-            if(this.jWTHandler.IsTokenValid(token))
+            if(this.jWTHandler.IsTokenValid(token.JWTToken))
             {
-                var listOfStringClaims = this.jWTHandler.GetClaims(token);
+                var listOfStringClaims = this.jWTHandler.GetClaims(token.JWTToken);
                 this.jWTHandler.ConformLogin(listOfStringClaims[0], listOfStringClaims[1]);
                 this.db.SetConformation(listOfStringClaims[0]);
 

@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ResponseDTO } from '../Interfaces/interfaces';
 
 @Component({
@@ -9,7 +10,8 @@ import { ResponseDTO } from '../Interfaces/interfaces';
 })
 export class SiteComponent implements OnInit {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+    public router: Router) { }
   public message: ResponseDTO = {
     massage: ""
   }
@@ -25,5 +27,11 @@ export class SiteComponent implements OnInit {
     this.http.get<ResponseDTO>(UrlServer).subscribe(
       event => {this.message = event}
     )
+  }
+
+  logout()
+  {
+    localStorage.removeItem("token");
+    this.router.navigateByUrl('/')
   }
 }

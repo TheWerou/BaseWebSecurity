@@ -1,0 +1,13 @@
+<h1> Zmien swoje haslo </h1>
+<hr>
+<form [formGroup]="formGrup" (ngSubmit)="resetpass()">
+    <div class="form-group">
+        <label for="inputLogin">Podaj hasło</label>
+        <input type="text" class="form-control" id="inputLogin" placeholder="Login" formControlName="pass1">
+    </div>
+    <div class="form-group">
+        <label for="inputPassword">Powtorz hasło</label>
+        <input type="password" class="form-control" id="inputPassword" placeholder="Hasło" formControlName="pass2">
+    </div>
+    <button  type="submit" class="btn btn-dark">Zmien hasło</button>
+</form>

@@ -1,0 +1,13 @@
+<h1> Logowanie </h1>
+<hr>
+<form [formGroup]="formGrup" (ngSubmit)="passwordReset()">
+    <div class="form-group">
+        <p>Jeżeli znajdziemy maila wyślemy kod resetujący</p>
+        <label for="inputLogin">Email</label>
+        <input type="text" class="form-control" id="inputLogin" placeholder="email" formControlName="email">
+    </div>
+    <button  type="submit" class="btn btn-dark">Wyslij prosbe o nowe hasło</button>
+    <div *ngIf="formGrup.hasError('required', 'pass')">
+        Potrzeba cos wpisac
+    </div>
+</form>

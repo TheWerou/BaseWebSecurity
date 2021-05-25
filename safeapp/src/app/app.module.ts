@@ -10,6 +10,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SiteComponent } from './site/site.component';
 import { HttpClientModule } from '@angular/common/http';
 import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
+import { PassResetComponent } from './pass-reset/pass-reset.component';
+import { AcceptaccountComponent } from './acceptaccount/acceptaccount.component';
+import { PassResetReqComponent } from './pass-reset-req/pass-reset-req.component';
 
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -21,7 +24,10 @@ export function tokenGetter() {
     MainComponent,
     LoginComponent,
     RegistryComponent,
-    SiteComponent
+    SiteComponent,
+    PassResetComponent,
+    AcceptaccountComponent,
+    PassResetReqComponent
   ],
   imports: [
     BrowserModule,

@@ -14,3 +14,7 @@ export interface ReturnJWT {
 export interface ResponseDTO {
   massage: string;
 }
+export interface UserPassRestart {
+  password: string;
+  token: string;
+}
