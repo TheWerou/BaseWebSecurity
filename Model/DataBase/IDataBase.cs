@@ -20,5 +20,15 @@ namespace OBiBiapp.Model
         public bool CheckIfUserIsCorrect(UserLogin user);
 
         public void DeleteUser(User user);
+
+        public void ConformPassReset(string email);
+
+        public void ConformLogin(string login, string email);
+
+        public bool CheckIfAutorized(string login);
+
+        public void AddPassRestartRequest(string email, string token);
+
+        public void AddAutRequest(string login, string email, string token);
     }
 }

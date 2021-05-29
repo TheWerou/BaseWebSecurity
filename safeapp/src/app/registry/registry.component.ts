@@ -14,9 +14,9 @@ export class RegistryComponent implements OnInit {
   constructor(public formBuilder: FormBuilder, public loginService: LoginServiceService) {
     this.formGrup = this.formBuilder.group({
       login: new FormControl("",[Validators.required]),
-      pass: new FormControl("",[Validators.required, Validators.pattern("^(?=.[0-9])(?=.[a-z])(?=.[A-Z])(?=.[!@#$%^&*():;\"'|,.<>~]).{12,}$") ]),
-      pass2: new FormControl("",[Validators.required, Validators.pattern("^(?=.[0-9])(?=.[a-z])(?=.[A-Z])(?=.[!@#$%^&*():;\"'|,.<>~]).{12,}$")]),
-      email: new FormControl("",[Validators.required]),
+      pass: new FormControl("",[Validators.required, Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{12,})') ]),
+      pass2: new FormControl("",[Validators.required, Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{12,})')]),
+      email: new FormControl("",[Validators.required, Validators.email]),
     });
    }
   formGrup: FormGroup;

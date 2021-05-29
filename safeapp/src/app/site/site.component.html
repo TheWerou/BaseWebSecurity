@@ -1,6 +1,17 @@
 <div>
     <label> Odpowiedz z servera </label>
-    <h4> {{message.massage}}</h4>
+    <table style="width:100%">
+        <tr>
+          <th>Login</th>
+          <th>mail</th>
+          <th>Password</th>
+        </tr>
+        <tr *ngFor="let item of message">
+          <td>{{ item.login }}</td>
+          <td>{{ item.email }}</td>
+          <td>{{ item.password }}</td>
+        </tr>
+      </table>
 </div>
 <hr>
 <button [routerLink]="['']" type="submit" class="btn btn-dark">Strona głowna</button>

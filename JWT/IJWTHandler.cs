@@ -12,11 +12,7 @@ namespace OBiBiapp.JWT
 
         public string SecurityAlgorithm { get; set; }
 
-        public void ConformLogin(string login, string email);
-
         public string GenerateTokenForAccountConform(string login, string email);
-
-        public void ConformPassReset(string email);
 
         public List<string> GetClaims(string token);
 

@@ -14,10 +14,6 @@ namespace OBiBiapp.JWT
     {
         private IAuthService authService;
 
-        public List<ConformReqDto> ListOfConformToken;
-
-        public List<ConformReqDto> PasswordChangeRequestToken;
-
         public string SecretKey { get; set; } = "6575fae36288be6d1bad40b99808e37f";
 
         public string SecurityAlgorithm { get; set; } = SecurityAlgorithms.HmacSha256Signature;
@@ -27,8 +23,6 @@ namespace OBiBiapp.JWT
         public JWTHandler()
         {
             this.authService = new JWTService(SecretKey);
-            this.ListOfConformToken = new List<ConformReqDto>();
-            this.PasswordChangeRequestToken = new List<ConformReqDto>();
         }
 
         public string GenerateToken(string login)
@@ -42,13 +36,6 @@ namespace OBiBiapp.JWT
         {
             IAuthContainerModel model = this.GetJWTContainerModel(email.Email);
             var token = authService.GenerateToken(model);
-            var conformRequest = new ConformReqDto()
-            {
-                Login = email.Login,
-                Email = email.Email,
-                Token = token,
-            };
-            this.PasswordChangeRequestToken.Add(conformRequest);
             return token;
         }
 
@@ -58,27 +45,11 @@ namespace OBiBiapp.JWT
             IAuthContainerModel model = this.GetJWTContainerModelForMailConform(login, email);
             this.ExpireMinutes = 10080;
             var tokenGen = authService.GenerateToken(model);
-            var conformRequest = new ConformReqDto()
-            {
-                Login = login,
-                Email = email,
-                Token = tokenGen,
-            };
-            this.ListOfConformToken.Add(conformRequest);
+
             return tokenGen;
         }
 
-        public void ConformLogin(string login, string email)
-        {
-            var requestConfirm = this.ListOfConformToken.Find(c => c.Login == login && c.Login == email);
-            this.ListOfConformToken.Remove(requestConfirm);
-        }
 
-        public void ConformPassReset(string email)
-        {
-            var requestConfirm = this.ListOfConformToken.Find(c => c.Login == email);
-            this.PasswordChangeRequestToken.Remove(requestConfirm);
-        }
 
         public List<string> GetClaims(string token)
         {
@@ -90,8 +61,6 @@ namespace OBiBiapp.JWT
             }
             return ListOfString;
         }
-
-
 
         public bool IsTokenValid(string token)
         {

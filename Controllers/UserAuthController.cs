@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using OBiBiapp.Handlers.MailHandling;
+using OBiBiapp.Handlers.PasswordHandling;
 using OBiBiapp.JWT;
 using OBiBiapp.Model;
 using System;
@@ -34,16 +35,27 @@ namespace OBiBiapp.Controllers
         {
             return "XD";
         }
+        [HttpPost("TestPassChecker")]
+        public bool TestPassChecker(string pass)
+        {
+            return PasswordChecker.ValidatePassword(pass);
+        }
+
 
         [HttpPost("RestartPassword")]
         public bool RestartPassword(UserPassRestart userPass)
         {
             if (this.jWTHandler.IsTokenValid(userPass.Token))
             {
-                var ListClaims = this.jWTHandler.GetClaims(userPass.Token);
-                this.jWTHandler.ConformPassReset(ListClaims[0]);
-                this.db.ResetPassword(ListClaims[0], userPass);
-                return true;
+                if(PasswordChecker.ValidatePassword(userPass.Password))
+                {
+                    var ListClaims = this.jWTHandler.GetClaims(userPass.Token);
+                    this.db.ConformPassReset(ListClaims[0]);
+                    this.db.ResetPassword(ListClaims[0], userPass);
+                    return true;
+                }
+
+                return false;
             }
             return false;
         }
@@ -52,6 +64,7 @@ namespace OBiBiapp.Controllers
         public void RequestPasswordChange(ResponseDTO userEmail)
         {
             var token = this.jWTHandler.GenerateToken(userEmail.Massage);
+            this.db.AddPassRestartRequest(userEmail.Massage, token);
             MailSender.SendPasswordResetMail(userEmail.Massage, token);
         }
 
@@ -62,7 +75,7 @@ namespace OBiBiapp.Controllers
             if(this.jWTHandler.IsTokenValid(token.JWTToken))
             {
                 var listOfStringClaims = this.jWTHandler.GetClaims(token.JWTToken);
-                this.jWTHandler.ConformLogin(listOfStringClaims[0], listOfStringClaims[1]);
+                this.db.ConformLogin(listOfStringClaims[0], listOfStringClaims[1]);
                 this.db.SetConformation(listOfStringClaims[0]);
 
                 return true;
@@ -72,9 +85,8 @@ namespace OBiBiapp.Controllers
         }
 
         [HttpGet("SecuredService")]
-        public ResponseDTO SecuredService()
+        public IEnumerable<User> SecuredService()
         {
-            ResponseDTO retrunObject = new ResponseDTO();
             if (this.Request.Headers.ContainsKey("authorization"))
             {
                 var header = this.Request.Headers;
@@ -85,19 +97,17 @@ namespace OBiBiapp.Controllers
 
                 if (this.jWTHandler.IsTokenValid(stringJWT))
                 {
-                    retrunObject.Massage = "Tajna wiadomosc";
-                    return retrunObject;
+                    
+                    return this.db.GetAllUsers();
                 }
                 else
                 {
-                    retrunObject.Massage = "Nie jestes zalogowany";
-                    return retrunObject;
+                    return null;
                 }
             }
             else
             {
-                retrunObject.Massage = "Nie jestes zalogowany";
-                return retrunObject;
+                return null;
             }
         }
 
@@ -118,9 +128,14 @@ namespace OBiBiapp.Controllers
         [HttpPost("AddUser")]
         public void AddUser(UserAdd user)
         {
-            this.db.AddUser(user);
-            var conformToken = this.jWTHandler.GenerateTokenForAccountConform(user.Login, user.Email);
-            MailSender.SendConfirmationMail(user.Email, conformToken);
+            if (PasswordChecker.ValidatePassword(user.Password))
+            {
+                this.db.AddUser(user);
+                var conformToken = this.jWTHandler.GenerateTokenForAccountConform(user.Login, user.Email);
+                this.db.AddAutRequest(user.Login, user.Email, conformToken);
+                MailSender.SendConfirmationMail(user.Email, conformToken);
+            }
+               
         }
 
         [HttpPost("SendMailTest")]
@@ -135,10 +150,14 @@ namespace OBiBiapp.Controllers
 
             if (this.db.CheckIfUserIsCorrect(login))
             {
-                return new ReturnJWT()
+                if(this.db.CheckIfAutorized(login.Login))
                 {
-                    JWTToken = this.jWTHandler.GenerateToken(login.Login)
-                };
+                    return new ReturnJWT()
+                    {
+                        JWTToken = this.jWTHandler.GenerateToken(login.Login)
+                    };
+                }
+                return null;
             }
             else
             {

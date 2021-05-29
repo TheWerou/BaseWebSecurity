@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ResponseDTO } from '../Interfaces/interfaces';
+import { ResponseDTO, User } from '../Interfaces/interfaces';
 
 @Component({
   selector: 'app-site',
@@ -12,9 +12,7 @@ export class SiteComponent implements OnInit {
 
   constructor(private http: HttpClient,
     public router: Router) { }
-  public message: ResponseDTO = {
-    massage: ""
-  }
+  public message: User[] = []
 
   ngOnInit(): void {
     this.getData();
@@ -24,7 +22,7 @@ export class SiteComponent implements OnInit {
   {
     let serverUrl: string = "https://localhost:44360/UserAuth/"
     let UrlServer = serverUrl + "SecuredService" 
-    this.http.get<ResponseDTO>(UrlServer).subscribe(
+    this.http.get<User[]>(UrlServer).subscribe(
       event => {this.message = event}
     )
   }

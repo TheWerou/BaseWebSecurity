@@ -12,11 +12,11 @@ import { PassResetReqComponent } from './pass-reset-req/pass-reset-req.component
 
 const routes: Routes = [
   { path: '', component:  MainComponent},
-  { path: 'Login', component:  LoginComponent},
-  { path: 'Registry', component:  RegistryComponent},
+  { path: 'Login', component:  LoginComponent },
+  { path: 'Registry', component:  RegistryComponent, },
   { path: 'Site', component:  SiteComponent, canActivate: [AuthguardGuard]},
   { path: 'ResetPassword', component:  PassResetComponent},
-  { path: 'AcceptAccount', component:  AcceptaccountComponent},
+  { path: 'AcceptAccount', component:  AcceptaccountComponent },
   { path: 'ForgotPassword', component:  PassResetReqComponent},
   { path: '**',  redirectTo: '' },
 ];

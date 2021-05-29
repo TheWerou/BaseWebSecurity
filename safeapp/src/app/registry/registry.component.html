@@ -12,24 +12,16 @@
     <div class="form-group">
         <label for="inputPassword">Hasło</label>
         <input type="password" class="form-control" id="inputPassword" placeholder="pass" formControlName="pass" >
+        <label *ngIf="formGrup.hasError('pattern', 'pass')">
+            Hasło powino się składać z dużych oraz małych znaków cyfr i znaków specialnych
+        </label>
     </div>
     <div class="form-group">
         <label for="inputPassword">Hasło</label>
         <input type="password" class="form-control" id="inputPassword" placeholder="pass2" formControlName="pass2" >
-    </div>
-    <div>
-        <div *ngIf="formGrup.hasError('required', 'login')">
-            Brakuje loginu
-        </div>
-        <div *ngIf="">
+        <label *ngIf="formGrup.hasError('pattern', 'pass2')">
             Hasło powino się składać z dużych oraz małych znaków cyfr i znaków specialnych
-        </div>
-        <div *ngIf="formGrup.hasError('required', 'pass2')">
-            
-        </div>
-        <div *ngIf="formGrup.hasError('required', 'email')">
-            brak emaila
-        </div>
+        </label>
     </div>
     <button type="submit" class="btn btn-dark">Załóż konto</button>
 </form>
