@@ -15,11 +15,14 @@ namespace OBiBiapp.Model
 
         public List<ConformReqDto> PasswordChangeRequestToken;
 
+        public List<ConformReqDto> TwoFARequests;
+
         public DataBase()
         {
             this.listOfUsers = new List<User>();
             this.ListOfConformToken = new List<ConformReqDto>();
             this.PasswordChangeRequestToken = new List<ConformReqDto>();
+            this.TwoFARequests = new List<ConformReqDto>();
             this.CreateUser();
         }
 
@@ -29,13 +32,13 @@ namespace OBiBiapp.Model
             {
                 Login = "Tomek",
                 Password = "Tomek",
-                Email = "Tomek@Tomek.Tomek,"
+                Email = "Tomek@Tomek.Tomek"
             };
             var newUser2 = new UserAdd()
             {
                 Login = "Michal",
                 Password = "Michal",
-                Email = "Michal@Michal.Michal,"
+                Email = "Michal@Michal.Michal"
             };
             AddUser(newUser);
             AddUser(newUser2);
@@ -103,6 +106,17 @@ namespace OBiBiapp.Model
             return false;
         }
 
+        public bool CheckIfTwoFAREqExist(string login)
+        {
+            var request = this.TwoFARequests.Find(r => r.Login == login );
+            if(request != null)
+            {
+                return true;
+            }
+            return false;
+
+        }
+
         public void DeleteUser(User user)
         {
             this.listOfUsers.Remove(user);
@@ -118,7 +132,6 @@ namespace OBiBiapp.Model
                 Token = token,
             };
             this.ListOfConformToken.Add(conformRequest);
-
         }
 
         public void AddPassRestartRequest(string email, string token)
@@ -135,6 +148,30 @@ namespace OBiBiapp.Model
                 this.PasswordChangeRequestToken.Add(conformRequest);
             }
 
+        }
+
+        public string GenereteTokenForTwoFA()
+        {
+            Random generator = new Random();
+            return generator.Next(0, 1000000).ToString("D6");
+        }
+
+        public void AddTwoFARequest(UserLogin user, string token)
+        {
+            var user2 = this.listOfUsers.Find(u => u.Login == user.Login);
+            var conformRequest = new ConformReqDto()
+            {
+                Login = user.Login,
+                Email = user2.Email,
+                Token = token,
+            };
+            this.TwoFARequests.Add(conformRequest);
+        }
+
+        public void ConformTwoFALogin(UserLogin user)
+        {
+            var requestConfirm = this.TwoFARequests.Find(c => c.Login == user.Login);
+            this.ListOfConformToken.Remove(requestConfirm);
         }
 
         public void ConformLogin(string login, string email)

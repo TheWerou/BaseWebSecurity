@@ -9,16 +9,18 @@ import { AuthguardGuard } from './Auth/authguard.guard';
 import { PassResetComponent } from './pass-reset/pass-reset.component';
 import { AcceptaccountComponent } from './acceptaccount/acceptaccount.component';
 import { PassResetReqComponent } from './pass-reset-req/pass-reset-req.component';
+import { TwoFALoginComponent } from './login/two-falogin/two-falogin.component';
 
 const routes: Routes = [
   { path: '', component:  MainComponent},
   { path: 'Login', component:  LoginComponent },
+  { path: 'TwoFA', component:  TwoFALoginComponent},
   { path: 'Registry', component:  RegistryComponent, },
   { path: 'Site', component:  SiteComponent, canActivate: [AuthguardGuard]},
   { path: 'ResetPassword', component:  PassResetComponent},
   { path: 'AcceptAccount', component:  AcceptaccountComponent },
   { path: 'ForgotPassword', component:  PassResetReqComponent},
-  { path: '**',  redirectTo: '' },
+  { path: '**',  redirectTo: '/' },
 ];
 
 @NgModule({

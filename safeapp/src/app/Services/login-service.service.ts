@@ -1,5 +1,5 @@
 import { Injectable, Output } from '@angular/core';
-import { LogUser, ResponseDTO, ReturnJWT, User, UserPassRestart } from '../Interfaces/interfaces';
+import { LogUser, LogUserWithToken, ResponseDTO, ReturnJWT, User, UserPassRestart } from '../Interfaces/interfaces';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
@@ -15,7 +15,7 @@ export class LoginServiceService {
   serverUrl: string = "https://localhost:44360/UserAuth/"
   headers: any = { 'content-type': 'application/json' }
 
-  login(userLogin: LogUser): Observable<ReturnJWT>
+  login(userLogin: LogUserWithToken): Observable<ReturnJWT>
   {
     const body = JSON.stringify(userLogin);
     const UrlServer = this.serverUrl + "LoginJWT"
@@ -72,5 +72,12 @@ export class LoginServiceService {
     const body = JSON.stringify(requestObject);
     const UrlServer = this.serverUrl + "RequestPasswordChange"
     this.http.post(UrlServer, body, {'headers': this.headers}).subscribe();
+  }
+
+  requestLogin(userLogin: LogUser)
+  {
+    const body = JSON.stringify(userLogin);
+    const UrlServer = this.serverUrl + "RequestLogin"
+    return this.http.post(UrlServer, body, {'headers': this.headers})
   }
 }

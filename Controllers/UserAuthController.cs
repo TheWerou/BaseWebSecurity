@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using OBiBiapp.Handlers.MailHandling;
 using OBiBiapp.Handlers.PasswordHandling;
+using OBiBiapp.Handlers.SMSHandling;
 using OBiBiapp.JWT;
 using OBiBiapp.Model;
 using System;
@@ -41,13 +42,18 @@ namespace OBiBiapp.Controllers
             return PasswordChecker.ValidatePassword(pass);
         }
 
+        [HttpPost("TestSMSMessage")]
+        public void SendTestMessage()
+        {
+            MessageSender.SendSmsAsync("Wiadomosc Testowa");
+        }
 
         [HttpPost("RestartPassword")]
         public bool RestartPassword(UserPassRestart userPass)
         {
             if (this.jWTHandler.IsTokenValid(userPass.Token))
             {
-                if(PasswordChecker.ValidatePassword(userPass.Password))
+                if (PasswordChecker.ValidatePassword(userPass.Password))
                 {
                     var ListClaims = this.jWTHandler.GetClaims(userPass.Token);
                     this.db.ConformPassReset(ListClaims[0]);
@@ -72,7 +78,7 @@ namespace OBiBiapp.Controllers
         public bool AutorizeAccount(ReturnJWT token)
         {
             //https://localhost:44360/UserAuth/AutorizeAccount?token=12
-            if(this.jWTHandler.IsTokenValid(token.JWTToken))
+            if (this.jWTHandler.IsTokenValid(token.JWTToken))
             {
                 var listOfStringClaims = this.jWTHandler.GetClaims(token.JWTToken);
                 this.db.ConformLogin(listOfStringClaims[0], listOfStringClaims[1]);
@@ -97,7 +103,7 @@ namespace OBiBiapp.Controllers
 
                 if (this.jWTHandler.IsTokenValid(stringJWT))
                 {
-                    
+
                     return this.db.GetAllUsers();
                 }
                 else
@@ -135,7 +141,7 @@ namespace OBiBiapp.Controllers
                 this.db.AddAutRequest(user.Login, user.Email, conformToken);
                 MailSender.SendConfirmationMail(user.Email, conformToken);
             }
-               
+
         }
 
         [HttpPost("SendMailTest")]
@@ -144,18 +150,46 @@ namespace OBiBiapp.Controllers
             MailSender.SendConfirmationMail(user.Email, user.Login);
         }
 
-        [HttpPost("LoginJWT")]
-        public ReturnJWT LoginJWT(UserLogin login)
+        [HttpPost("RequestLogin")]
+        public bool RequestLogin(UserLogin login)
         {
-
             if (this.db.CheckIfUserIsCorrect(login))
             {
-                if(this.db.CheckIfAutorized(login.Login))
+                if (this.db.CheckIfAutorized(login.Login))
                 {
-                    return new ReturnJWT()
+                    var token = this.db.GenereteTokenForTwoFA();
+                    this.db.AddTwoFARequest(login, token);
+                    MessageSender.SendSmsAsync(token);
+                    return true;
+                }
+
+                return false;
+            }
+            return false;
+        }
+
+        [HttpPost("LoginJWT")]
+        public ReturnJWT LoginJWT(UserLoginWithToken login)
+        {
+            var loginObject = new UserLogin()
+            {
+                Login = login.Login,
+                Password = login.Password,
+            };
+
+            if (this.db.CheckIfUserIsCorrect(loginObject))
+            {
+                if (this.db.CheckIfAutorized(login.Login))
+                {
+                    if(this.db.CheckIfTwoFAREqExist(login.Login))
                     {
-                        JWTToken = this.jWTHandler.GenerateToken(login.Login)
-                    };
+                        this.db.ConformTwoFALogin(loginObject);
+                        return new ReturnJWT()
+                        {
+                            JWTToken = this.jWTHandler.GenerateToken(login.Login)
+                        };
+                    }
+                    
                 }
                 return null;
             }

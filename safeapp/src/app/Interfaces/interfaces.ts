@@ -1,7 +1,11 @@
 export interface LogUser {
     Login: string;
     Password: string;
-
+  }
+  export interface LogUserWithToken {
+    Login: string;
+    Password: string;
+    Token: string;
   }
 export interface User {
     login: string;

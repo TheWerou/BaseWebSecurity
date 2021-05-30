@@ -13,6 +13,7 @@ import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
 import { PassResetComponent } from './pass-reset/pass-reset.component';
 import { AcceptaccountComponent } from './acceptaccount/acceptaccount.component';
 import { PassResetReqComponent } from './pass-reset-req/pass-reset-req.component';
+import { TwoFALoginComponent } from './login/two-falogin/two-falogin.component';
 
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -27,7 +28,8 @@ export function tokenGetter() {
     SiteComponent,
     PassResetComponent,
     AcceptaccountComponent,
-    PassResetReqComponent
+    PassResetReqComponent,
+    TwoFALoginComponent
   ],
   imports: [
     BrowserModule,

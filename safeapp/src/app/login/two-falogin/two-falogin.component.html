@@ -1,0 +1,13 @@
+<h1> Podaj code </h1>
+<h3> Na twoj telefon zostało wysłany kod potwierdzający </h3>
+<hr>
+<form [formGroup]="formGrup" (ngSubmit)="twoAutorize()">
+    <div class="form-group">
+        <label for="inputLogin">Kod</label>
+        <input type="text" class="form-control" id="inputLogin" placeholder="" formControlName="code">
+    </div>
+    <button  type="submit" class="btn btn-dark">Autoryzuj</button>
+    <div *ngIf="formGrup.hasError('required', 'pass')">
+        Potrzeba cos wpisac
+    </div>
+</form>

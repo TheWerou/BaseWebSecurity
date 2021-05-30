@@ -27,6 +27,14 @@ namespace OBiBiapp.Model
 
         public bool CheckIfAutorized(string login);
 
+        public string GenereteTokenForTwoFA();
+
+        public void AddTwoFARequest(UserLogin user, string token);
+
+        public void ConformTwoFALogin(UserLogin user);
+
+        public bool CheckIfTwoFAREqExist(string login);
+
         public void AddPassRestartRequest(string email, string token);
 
         public void AddAutRequest(string login, string email, string token);

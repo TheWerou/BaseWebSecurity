@@ -49,8 +49,6 @@ namespace OBiBiapp.JWT
             return tokenGen;
         }
 
-
-
         public List<string> GetClaims(string token)
         {
             var clamims = this.authService.GetTokenClaims(token);

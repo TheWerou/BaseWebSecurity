@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { User } from '../Interfaces/interfaces';
 import { LoginServiceService } from '../Services/login-service.service';
@@ -14,8 +14,8 @@ export class RegistryComponent implements OnInit {
   constructor(public formBuilder: FormBuilder, public loginService: LoginServiceService) {
     this.formGrup = this.formBuilder.group({
       login: new FormControl("",[Validators.required]),
-      pass: new FormControl("",[Validators.required, Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{12,})') ]),
-      pass2: new FormControl("",[Validators.required, Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{12,})')]),
+      pass: new FormControl("",[Validators.required ]),
+      pass2: new FormControl("",[Validators.required ]),
       email: new FormControl("",[Validators.required, Validators.email]),
     });
    }
@@ -43,5 +43,5 @@ export class RegistryComponent implements OnInit {
     
     this.loginService.registerNewUser(newUser)
   }
-
+  
 }
