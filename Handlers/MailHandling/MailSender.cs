@@ -13,7 +13,7 @@ namespace OBiBiapp.Handlers.MailHandling
             client.EnableSsl = true;
             client.Timeout = 10000;
             client.UseDefaultCredentials = false;
-            client.Credentials = new NetworkCredential("TestOnReplyPK@gmail.com", "!WsXeDc321");
+            client.Credentials = new NetworkCredential("", "");
 
             var message = new MailMessage();
             message.From = new MailAddress("TestOnReplyPK@gmail.com");
